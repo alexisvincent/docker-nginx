@@ -13,7 +13,6 @@ RUN \
   apt-get update && \
   apt-get install -y nginx && \
   sudo apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
   chown -R www-data:www-data /var/lib/nginx
 
 COPY build/nginx.conf /etc/nginx/conf.d/nginx.conf
