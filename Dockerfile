@@ -5,7 +5,7 @@
 #
 
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM alexisvincent/ubuntu
 
 # Install Nginx.
 RUN \
