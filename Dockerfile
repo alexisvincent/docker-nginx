@@ -5,33 +5,19 @@
 #
 
 # Pull base image.
-FROM alexisvincent/ubuntu
+FROM nginx:1.7.9
 
-# Install Nginx.
-# RUN apt-get update
+RUN mkdir -p /data/www
 
-ENV NGINX_VERSION 1.7.8-1~trusty
-
-RUN  \
-	apt-key adv --keyserver pgp.mit.edu --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 && \
-	echo "deb http://nginx.org/packages/mainline/ubuntu/ trusty nginx" >> /etc/apt/sources.list && \
-	apt-get update && \
-	apt-get install -y nginx=${NGINX_VERSION} && \
-	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-	chown -R www-data:www-data /usr/share/nginx/html
-
-# forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
+COPY container/nginx.conf /etc/nginx/nginx.conf
+COPY container/default.conf /etc/nginx/conf.d/default.conf
+COPY container/index.html /data/www/index.html
 
 # Define mountable directories.
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/usr/share/nginx/html"]
-
-# Define working directory.
-WORKDIR /etc/nginx
+VOLUME ["/etc/nginx/conf.d", "/data/www"]
 
 # Define default command
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx"]
 
 # Expose ports.
 EXPOSE 80 443
